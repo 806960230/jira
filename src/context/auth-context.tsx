@@ -18,12 +18,12 @@ const AuthContext = React.createContext<
 >(undefined);
 AuthContext.displayName = "AuthContext";
 
-interface AuthForm {
+export interface AuthForm {
   username: string;
   password: string;
 }
 
-const bootstrapUser = async () => {
+export const bootstrapUser = async () => {
   let user = null;
   const token = auth.getToken();
   if (token) {

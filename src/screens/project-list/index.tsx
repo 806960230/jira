@@ -14,6 +14,8 @@ import { useUrlQueryParam } from "utils/url";
 import { useProjectsSearchParams } from "./util";
 import { Button } from "antd";
 import { Row } from "../../components/lib";
+import { useDispatch } from "react-redux";
+import { projectListActions } from "./project-list.slice";
 const apiUrl = process.env.REACT_APP_API_URL;
 export const ProjectListScreen = (props: {
   setProjectModalOpen: (isOpen: boolean) => void;
@@ -27,6 +29,7 @@ export const ProjectListScreen = (props: {
   const { isLoading, error, data: list, retry } = useProjects(debouncedParam);
   const { data: users } = useUsers();
   const client = useHttp();
+  const dispatch = useDispatch();
   return (
     <Container>
       <Helmet>
@@ -34,7 +37,9 @@ export const ProjectListScreen = (props: {
       </Helmet>
       <Row between={true}>
         <h1>项目列表</h1>
-        <Button onClick={() => props.setProjectModalOpen(true)}></Button>
+        <Button
+          onClick={() => dispatch(projectListActions.openProjectModal())}
+        ></Button>
       </Row>
 
       {/* <Button onClick={retry}>retry</Button> */}

@@ -6,6 +6,8 @@ import dayjs from "dayjs";
 import { Pin } from "components/pin";
 import { useEditProject } from "utils/project";
 import { ButtonNoPadding } from "components/lib";
+import { useDispatch, useSelector } from "react-redux";
+import { projectListActions } from "./project-list.slice";
 export interface Project {
   id: number;
   name: string;
@@ -22,6 +24,7 @@ interface ListProps extends TableProps<Project> {
 }
 export const List = ({ users, ...props }: ListProps) => {
   const { mutate } = useEditProject();
+  const dispatch = useDispatch();
   const pinProject = (id: number) => (pin: boolean) =>
     mutate({ id, pin }).then(props.refresh);
   return (
@@ -82,7 +85,9 @@ export const List = ({ users, ...props }: ListProps) => {
                     <Menu.Item key={"edit"}>
                       <ButtonNoPadding
                         type={"link"}
-                        onClick={() => props.setProjectModalOpen(true)}
+                        onClick={() =>
+                          dispatch(projectListActions.openProjectModal())
+                        }
                       >
                         编辑
                       </ButtonNoPadding>
