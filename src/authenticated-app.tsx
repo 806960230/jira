@@ -12,45 +12,31 @@ import { ProjectModal } from "screens/project-list/project-modal";
 import { useState } from "react";
 import { ProjectPopover } from "components/project-popover";
 export const AuthenticatedApp = () => {
-  const [projectModalOpen, setProjectModalOpen] = useState(false);
   return (
     <Container>
-      <PageHead setProjectModalOpen={setProjectModalOpen}></PageHead>
-      <Main>
-        {/* <ProjectListScreen /> */}
-        <Router>
+      <Router>
+        <PageHead></PageHead>
+
+        <Main>
+          {/* <ProjectListScreen /> */}
+
           <Routes>
-            <Route
-              path={"/"}
-              element={
-                <ProjectListScreen setProjectModalOpen={setProjectModalOpen} />
-              }
-            ></Route>
-            <Route
-              path={"/projects"}
-              element={
-                <ProjectListScreen setProjectModalOpen={setProjectModalOpen} />
-              }
-            ></Route>
+            <Route path={"/"} element={<ProjectListScreen />}></Route>
+            <Route path={"/projects"} element={<ProjectListScreen />}></Route>
             <Route
               path={"/projects/:projectId/*"}
               element={<ProjectScreen />}
             ></Route>
             {/* <Navigate to={'/projects'} ></Navigate> */}
           </Routes>
-        </Router>
-        <ProjectModal
-          projectModalOpen={projectModalOpen}
-          onClose={() => setProjectModalOpen}
-        ></ProjectModal>
-      </Main>
+          <ProjectModal></ProjectModal>
+        </Main>
+      </Router>
     </Container>
   );
 };
 
-const PageHead = (props: {
-  setProjectModalOpen: (isOpen: boolean) => void;
-}) => {
+const PageHead = () => {
   const { logout, user } = useAuth();
   return (
     <Header between={true}>
@@ -58,9 +44,7 @@ const PageHead = (props: {
         <ButtonNoPadding type={"link"} onClick={resetRoute}>
           <span>Logo</span>
         </ButtonNoPadding>
-        <ProjectPopover
-          setProjectModalOpen={props.setProjectModalOpen}
-        ></ProjectPopover>
+        <ProjectPopover></ProjectPopover>
         <span>用户</span>
       </HeaderLeft>
       <HeaderRight>

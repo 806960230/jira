@@ -7,24 +7,23 @@ import { cleanObject, useMount, useDebounce } from "utils";
 import { useHttp } from "utils/http";
 import styled from "@emotion/styled";
 import { useAsync } from "utils/use-async";
-import { useProjects } from "utils/project";
+import { useProject } from "utils/project";
 import { useUsers } from "utils/user";
 import { Helmet } from "react-helmet";
 import { useUrlQueryParam } from "utils/url";
-import { useProjectsSearchParams } from "./util";
+import { useProjectModal, useProjectsSearchParams } from "./util";
 import { Button } from "antd";
-import { Row } from "../../components/lib";
+import { ButtonNoPadding, Row } from "../../components/lib";
 const apiUrl = process.env.REACT_APP_API_URL;
-export const ProjectListScreen = (props: {
-  setProjectModalOpen: (isOpen: boolean) => void;
-}) => {
+export const ProjectListScreen = () => {
   // const [param, setParam] = useState({
   //     name: '',
   //     personId: 0
   // })
+  const { open } = useProjectModal();
   const [param, setParam] = useProjectsSearchParams();
   const debouncedParam = useDebounce(param, 2000);
-  const { isLoading, error, data: list, retry } = useProjects(debouncedParam);
+  const { isLoading, error, data: list } = useProject(debouncedParam);
   const { data: users } = useUsers();
   const client = useHttp();
   return (
@@ -34,7 +33,9 @@ export const ProjectListScreen = (props: {
       </Helmet>
       <Row between={true}>
         <h1>项目列表</h1>
-        <Button onClick={() => props.setProjectModalOpen(true)}></Button>
+        <ButtonNoPadding onClick={open} style={{ padding: 0 }} type={"link"}>
+          创建项目
+        </ButtonNoPadding>
       </Row>
 
       {/* <Button onClick={retry}>retry</Button> */}
@@ -44,8 +45,6 @@ export const ProjectListScreen = (props: {
         setParam={setParam}
       ></SearchPanel>
       <List
-        setProjectModalOpen={props.setProjectModalOpen}
-        refresh={retry}
         loading={isLoading}
         dataSource={list || []}
         users={users || []}

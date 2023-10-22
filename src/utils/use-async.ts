@@ -45,46 +45,77 @@ export const useAsync = <D>(
   const safeDispatch = useSafeDispatch(dispatch);
   //useState 直接传入函数的含义是: 惰性初始化，所以要用useState保存函数，不能直接传入函数
   const [retry, setRetry] = useState(() => () => {});
-  const setData = (data: D) =>
-    safeDispatch({
-      data,
-      stat: "success",
-      error: null,
-    });
+  const setData = useCallback(
+    (data: D) =>
+      safeDispatch({
+        data,
+        stat: "success",
+        error: null,
+      }),
+    [safeDispatch],
+  );
 
-  const setError = (error: Error) =>
-    safeDispatch({
-      error,
-      stat: "error",
-      data: null,
-    });
+  const setError = useCallback(
+    (error: Error) =>
+      safeDispatch({
+        error,
+        stat: "error",
+        data: null,
+      }),
+    [safeDispatch],
+  );
 
   // run 用来触发异步请求
-  const run = (
-    promise: Promise<D>,
-    runConfig?: { retry: () => Promise<D> },
-  ) => {
-    if (!promise || !promise.then) {
-      throw new Error("请传入 Promise 类型数据");
-    }
-    setRetry(() => () => {
-      console.log("set retry");
-      if (runConfig?.retry) {
-        run(runConfig?.retry(), runConfig);
+  const run = useCallback(
+    (promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
+      if (!promise || !promise.then) {
+        throw new Error("请传入 Promise 类型数据");
       }
-    });
-    safeDispatch({ stat: "loading" });
-    return promise
-      .then((data) => {
-        setData(data);
-        return data;
-      })
-      .catch((error) => {
-        setError(error);
-        if (config.throwOnError) return Promise.reject(error);
-        return error;
+      setRetry(() => () => {
+        console.log("set retry");
+        if (runConfig?.retry) {
+          run(runConfig?.retry(), runConfig);
+        }
       });
-  };
+      safeDispatch({ stat: "loading" });
+      return promise
+        .then((data) => {
+          setData(data);
+          return data;
+        })
+        .catch((error) => {
+          setError(error);
+          if (config.throwOnError) return Promise.reject(error);
+          return error;
+        });
+    },
+    [config.throwOnError, setData, setError, safeDispatch],
+  );
+  // const run = (
+  //     promise: Promise<D>,
+  //     runConfig?: { retry: () => Promise<D> },
+  // ) => {
+  //     if (!promise || !promise.then) {
+  //         throw new Error("请传入 Promise 类型数据");
+  //     }
+  //     setRetry(() => () => {
+  //         console.log("set retry");
+  //         if (runConfig?.retry) {
+  //             run(runConfig?.retry(), runConfig);
+  //         }
+  //     });
+  //     safeDispatch({ stat: "loading" });
+  //     return promise
+  //         .then((data) => {
+  //             setData(data);
+  //             return data;
+  //         })
+  //         .catch((error) => {
+  //             setError(error);
+  //             if (config.throwOnError) return Promise.reject(error);
+  //             return error;
+  //         });
+  // };
 
   return {
     isIdle: state.stat === "idle",
