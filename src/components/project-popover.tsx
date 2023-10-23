@@ -6,9 +6,7 @@ import { ButtonNoPadding } from "./lib";
 import { useDispatch } from "react-redux";
 import { projectListActions } from "screens/project-list/project-list.slice";
 
-export const ProjectPopover = (props: {
-  setProjectModalOpen: (isOpen: boolean) => void;
-}) => {
+export const ProjectPopover = () => {
   const dispatch = useDispatch();
   const { data: projects, isLoading } = useProjects();
   const pinnedProjects = projects?.filter((project) => project.pin);
@@ -24,7 +22,7 @@ export const ProjectPopover = (props: {
       </List>
       <Divider></Divider>
       <ButtonNoPadding
-        onClick={() => dispatch(projectListActions.openProjectModal)}
+        onClick={() => dispatch(projectListActions.openProjectModal())}
         style={{ padding: 0 }}
         type={"link"}
       >

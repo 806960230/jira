@@ -20,7 +20,6 @@ export interface Project {
 interface ListProps extends TableProps<Project> {
   users: User[];
   refresh?: () => void;
-  setProjectModalOpen: (isOpen: boolean) => void;
 }
 export const List = ({ users, ...props }: ListProps) => {
   const { mutate } = useEditProject();

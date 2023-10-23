@@ -14,6 +14,7 @@ export const projectListSlice = createSlice({
   initialState,
   reducers: {
     openProjectModal(state) {
+      console.log("SDAASDAS", state);
       state.projectModalOpen = true;
     },
     closeProjectModal(state) {

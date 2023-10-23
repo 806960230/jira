@@ -17,9 +17,7 @@ import { Row } from "../../components/lib";
 import { useDispatch } from "react-redux";
 import { projectListActions } from "./project-list.slice";
 const apiUrl = process.env.REACT_APP_API_URL;
-export const ProjectListScreen = (props: {
-  setProjectModalOpen: (isOpen: boolean) => void;
-}) => {
+export const ProjectListScreen = () => {
   // const [param, setParam] = useState({
   //     name: '',
   //     personId: 0
@@ -49,7 +47,6 @@ export const ProjectListScreen = (props: {
         setParam={setParam}
       ></SearchPanel>
       <List
-        setProjectModalOpen={props.setProjectModalOpen}
         refresh={retry}
         loading={isLoading}
         dataSource={list || []}

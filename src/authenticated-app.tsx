@@ -11,27 +11,18 @@ import { resetRoute } from "utils";
 import { ProjectModal } from "screens/project-list/project-modal";
 import { useState } from "react";
 import { ProjectPopover } from "components/project-popover";
+import { useDispatch } from "react-redux";
 export const AuthenticatedApp = () => {
-  const [projectModalOpen, setProjectModalOpen] = useState(false);
+  const dispatch = useDispatch();
   return (
     <Container>
-      <PageHead setProjectModalOpen={setProjectModalOpen}></PageHead>
+      <PageHead></PageHead>
       <Main>
         {/* <ProjectListScreen /> */}
         <Router>
           <Routes>
-            <Route
-              path={"/"}
-              element={
-                <ProjectListScreen setProjectModalOpen={setProjectModalOpen} />
-              }
-            ></Route>
-            <Route
-              path={"/projects"}
-              element={
-                <ProjectListScreen setProjectModalOpen={setProjectModalOpen} />
-              }
-            ></Route>
+            <Route path={"/"} element={<ProjectListScreen />}></Route>
+            <Route path={"/projects"} element={<ProjectListScreen />}></Route>
             <Route
               path={"/projects/:projectId/*"}
               element={<ProjectScreen />}
@@ -39,18 +30,17 @@ export const AuthenticatedApp = () => {
             {/* <Navigate to={'/projects'} ></Navigate> */}
           </Routes>
         </Router>
-        <ProjectModal
+        <ProjectModal></ProjectModal>
+        {/* <ProjectModal
           projectModalOpen={projectModalOpen}
           onClose={() => setProjectModalOpen}
-        ></ProjectModal>
+        ></ProjectModal> */}
       </Main>
     </Container>
   );
 };
 
-const PageHead = (props: {
-  setProjectModalOpen: (isOpen: boolean) => void;
-}) => {
+const PageHead = () => {
   const { logout, user } = useAuth();
   return (
     <Header between={true}>
@@ -58,9 +48,7 @@ const PageHead = (props: {
         <ButtonNoPadding type={"link"} onClick={resetRoute}>
           <span>Logo</span>
         </ButtonNoPadding>
-        <ProjectPopover
-          setProjectModalOpen={props.setProjectModalOpen}
-        ></ProjectPopover>
+        <ProjectPopover></ProjectPopover>
         <span>用户</span>
       </HeaderLeft>
       <HeaderRight>

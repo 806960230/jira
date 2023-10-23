@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { User } from "screens/project-list/search-panel";
 import * as auth from "auth-provider";
-import { AppDispatch } from "store";
+import { AppDispatch, RootState } from "store";
 import { AuthForm, bootstrapUser } from "context/auth-context";
 
 interface State {
@@ -23,6 +23,8 @@ export const authSlice = createSlice({
 });
 
 const { setUser } = authSlice.actions;
+
+export const selectUser = (state: RootState) => state.auth.user;
 
 export const login = (form: AuthForm) => (dispatch: AppDispatch) =>
   auth.login(form).then((user) => dispatch(setUser(user)));
